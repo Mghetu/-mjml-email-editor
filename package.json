@@ -1,0 +1,15 @@
+{
+  "name": "mjml-email-editor",
+  "version": "1.0.0",
+  "description": "MJML Email Editor with GrapesJS Studio SDK",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'Open index.html in browser'"
+  },
+  "dependencies": {
+    "@grapesjs/studio-sdk": "^1.0.55"
+  },
+  "keywords": ["mjml", "email", "editor", "grapesjs"],
+  "author": "Your Name",
+  "license": "MIT"
+}
