@@ -100,7 +100,7 @@ async function initializeEditor() {
     
     studioEditor = await GrapesJsStudioSDK.createStudioEditor({
       root: '#studio-editor',
-      licenseKey: 'DEMO_LOCALHOST_KEY',
+      licenseKey: 'd8c583c16c0545ed84f39d90415813727f40d902b1144a5c84f2200765ec4562',
       theme: 'light',
       
       project: {
