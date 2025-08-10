@@ -5,7 +5,7 @@ let studioEditor = null;
 function setStatus(message, type = 'default') {
   const statusEl = document.getElementById('status');
   statusEl.textContent = message;
-  
+
   // Auto-clear after 3 seconds
   setTimeout(() => {
     statusEl.textContent = 'Ready';
@@ -43,7 +43,7 @@ const defaultMJMLTemplate = `<mjml>
           Welcome to Your MJML Editor! 🚀
         </mj-text>
         <mj-text color="#4a5568" line-height="24px">
-          This professional email editor is powered by GrapesJS Studio SDK. 
+          This professional email editor is powered by GrapesJS Studio SDK.
           Create beautiful, responsive emails with drag-and-drop MJML components.
         </mj-text>
         <mj-button background-color="#667eea" href="#" padding="15px 0">
@@ -79,7 +79,7 @@ const defaultMJMLTemplate = `<mjml>
           © 2025 Your Company. Built with GrapesJS Studio SDK
         </mj-text>
         <mj-text align="center" color="#a0aec0" font-size="11px">
-          <a href="#" style="color: #667eea;">Unsubscribe</a> | 
+          <a href="#" style="color: #667eea;">Unsubscribe</a> |
           <a href="#" style="color: #667eea;">Preferences</a>
         </mj-text>
       </mj-column>
@@ -87,41 +87,148 @@ const defaultMJMLTemplate = `<mjml>
   </mj-body>
 </mjml>`;
 
-// Initialize Studio SDK
-async function initializeEditor() {
-  try {
-    setStatus('Loading...');
-    console.log('🚀 Initializing MJML Editor...');
-    
-    // Check if Studio SDK is available
-    if (typeof GrapesJsStudioSDK === 'undefined') {
-      throw new Error('Studio SDK not loaded');
+// Storage implementation using localStorage
+const storage = {
+  // Save project data to localStorage
+  onSave: async ({ project }) => {
+    try {
+      const projectData = JSON.stringify(project);
+      localStorage.setItem('mjml-editor-project', projectData);
+      setStatus('Project saved!');
+      console.log('Project saved to localStorage');
+    } catch (error) {
+      console.error('Save failed:', error);
+      setStatus('Save failed');
+      throw error;
     }
-    
-    studioEditor = await GrapesJsStudioSDK.createStudioEditor({
-      root: '#studio-editor',
-      licenseKey: 'd8c583c16c0545ed84f39d90415813727f40d902b1144a5c84f2200765ec4562',
-      theme: 'light',
-      
-      project: {
-        type: 'email',
-        default: {
+  },
+
+  // Load project data from localStorage
+  onLoad: async () => {
+    try {
+      const projectData = localStorage.getItem('mjml-editor-project');
+      if (projectData) {
+        const project = JSON.parse(projectData);
+        setStatus('Project loaded!');
+        console.log('Project loaded from localStorage');
+        return { project };
+      } else {
+        // Return default project structure
+        return {
+          project: {
+            pages: [{
+              name: 'Email Template',
+              component: defaultMJMLTemplate
+            }]
+          }
+        };
+      }
+    } catch (error) {
+      console.error('Load failed:', error);
+      setStatus('Load failed');
+      // Return default on error
+      return {
+        project: {
           pages: [{
             name: 'Email Template',
             component: defaultMJMLTemplate
           }]
         }
-      },
+      };
+    }
+  }
+};
+
+// Asset management (for now, just placeholder functions)
+const assets = {
+  // Handle file uploads (placeholder - you'll need a real backend)
+  onUpload: async ({ files }) => {
+    try {
+      setStatus('Upload not implemented yet');
+      console.warn('Upload functionality needs backend implementation');
       
+      // For now, return placeholder URLs
+      const results = Array.from(files).map(file => ({
+        src: URL.createObjectURL(file), // This creates a temporary URL
+        name: file.name
+      }));
+      
+      return results;
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setStatus('Upload failed');
+      return [];
+    }
+  },
+
+  // Handle asset deletion (placeholder - you'll need a real backend)
+  onDelete: async ({ assets }) => {
+    try {
+      setStatus('Delete not implemented yet');
+      console.warn('Delete functionality needs backend implementation');
+      // For file URLs created with createObjectURL, revoke them
+      assets.forEach(asset => {
+        if (asset.src && asset.src.startsWith('blob:')) {
+          URL.revokeObjectURL(asset.src);
+        }
+      });
+    } catch (error) {
+      console.error('Delete failed:', error);
+      setStatus('Delete failed');
+    }
+  }
+};
+
+// Initialize Studio SDK with new configuration
+async function initializeEditor() {
+  try {
+    setStatus('Loading...');
+    console.log('🚀 Initializing MJML Editor with Layout Sidebar...');
+
+    // Check if Studio SDK is available
+    if (typeof GrapesJsStudioSDK === 'undefined') {
+      throw new Error('Studio SDK not loaded');
+    }
+
+    // Check if layout sidebar buttons plugin is available
+    if (typeof StudioSdkPlugins_layoutSidebarButtons === 'undefined') {
+      throw new Error('Layout Sidebar Buttons plugin not loaded');
+    }
+
+    studioEditor = await GrapesJsStudioSDK.createStudioEditor({
+      root: '#studio-editor',
+      licenseKey: 'd8c583c16c0545ed84f39d90415813727f40d902b1144a5c84f2200765ec4562',
+      theme: 'dark',
+      
+      project: {
+        type: 'email'
+      },
+
+      assets: {
+        storageType: 'self',
+        onUpload: assets.onUpload,
+        onDelete: assets.onDelete
+      },
+
       storage: {
-        type: 'local'
-      }
+        type: 'self',
+        onSave: storage.onSave,
+        onLoad: storage.onLoad,
+        autosaveChanges: 100,
+        autosaveIntervalMs: 10000
+      },
+
+      plugins: [
+        StudioSdkPlugins_layoutSidebarButtons.init({
+          /* Plugin options can be added here */
+        })
+      ]
     });
-    
-    console.log('✅ Studio SDK initialized');
+
+    console.log('✅ Studio SDK initialized with Layout Sidebar');
     setupUI();
     setStatus('Ready!');
-    
+
   } catch (error) {
     console.error('❌ Failed:', error);
     setStatus('Error: ' + error.message);
@@ -141,6 +248,7 @@ function showError(error) {
           <li>Network connectivity issues</li>
           <li>CDN blocking</li>
           <li>Browser compatibility</li>
+          <li>Plugin loading failure</li>
         </ul>
         <button onclick="location.reload()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
           🔄 Retry
@@ -153,7 +261,7 @@ function showError(error) {
 // Setup UI handlers
 function setupUI() {
   console.log('🔧 Setting up UI...');
-  
+
   // View Code
   document.getElementById('btnViewCode').onclick = () => {
     try {
@@ -163,6 +271,7 @@ function setupUI() {
       document.getElementById('code-viewer').style.display = 'flex';
     } catch (error) {
       setStatus('Error showing code');
+      console.error('View code error:', error);
     }
   };
 
@@ -174,6 +283,7 @@ function setupUI() {
       setStatus('Copied!');
     } catch (error) {
       setStatus('Copy failed');
+      console.error('Copy error:', error);
     }
   };
 
@@ -186,6 +296,7 @@ function setupUI() {
       setStatus('MJML copied!');
     } catch (error) {
       setStatus('Export failed');
+      console.error('Export error:', error);
     }
   };
 
@@ -195,7 +306,7 @@ function setupUI() {
       const project = studioEditor.getProject();
       const mjmlCode = project?.pages?.[0]?.component || '';
       const filename = document.getElementById('templateName').value || 'newsletter.mjml';
-      
+
       const blob = new Blob([mjmlCode], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -203,10 +314,11 @@ function setupUI() {
       a.download = filename.endsWith('.mjml') ? filename : filename + '.mjml';
       a.click();
       URL.revokeObjectURL(url);
-      
+
       setStatus('Downloaded!');
     } catch (error) {
       setStatus('Save failed');
+      console.error('Save error:', error);
     }
   };
 
@@ -230,6 +342,7 @@ function setupUI() {
             setStatus('Loaded!');
           } catch (error) {
             setStatus('Load failed');
+            console.error('Load error:', error);
           }
         };
         reader.readAsText(file);
@@ -243,4 +356,4 @@ function setupUI() {
 
 // Initialize when ready
 document.addEventListener('DOMContentLoaded', initializeEditor);
-console.log('📜 App loaded');
+console.log('📜 App loaded with Layout Sidebar support');
