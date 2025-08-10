@@ -4,11 +4,15 @@
   <meta charset="utf-8" />
   <title>MJML Email Editor</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  
   <!-- Studio SDK from CDN -->
-  <script src="https://unpkg.com/@grapesjs/studio-sdk@latest/dist/index.umd.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/@grapesjs/studio-sdk@latest/dist/style.css">
+  <script src="https://unpkg.com/@grapesjs/studio-sdk/dist/index.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@grapesjs/studio-sdk-plugins@latest/dist/layoutSidebarButtons/index.umd.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@grapesjs/studio-sdk/dist/style.css">
+  
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  
   <!-- Custom styles -->
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +23,7 @@
       <label>Template name:</label>
       <input id="templateName" type="text" placeholder="my-newsletter.mjml" />
     </div>
-    
+
     <div class="toolbar-group">
       <button id="btnSave" title="Download MJML file">
         <i class="fas fa-download"></i> Save
@@ -34,18 +38,18 @@
         <i class="fas fa-code"></i> Code
       </button>
     </div>
-    
+
     <div class="toolbar-group">
       <span id="status">Ready</span>
     </div>
-    
+
     <div class="toolbar-group" style="margin-left: auto;">
       <span style="font-size: 13px; color: white;">
         <i class="fab fa-github"></i> MJML Editor
       </span>
     </div>
   </div>
-  
+
   <!-- Code viewer modal -->
   <div id="code-viewer" style="display: none;">
     <div id="code-viewer-header">
@@ -63,9 +67,9 @@
       <pre id="mjml-code"></pre>
     </div>
   </div>
-  
+
   <!-- Studio SDK Editor -->
-  <div id="studio-editor"></div>
+  <div id="studio-editor" style="height: calc(100vh - 65px)"></div>
 
   <!-- Load the main application -->
   <script src="./app.js"></script>
