@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MJML Email Editor</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Studio SDK from CDN -->
+  <script src="https://unpkg.com/@grapesjs/studio-sdk@latest/dist/index.umd.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@grapesjs/studio-sdk@latest/dist/style.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Top toolbar -->
+  <div id="topbar">
+    <div class="toolbar-group">
+      <label>Template name:</label>
+      <input id="templateName" type="text" placeholder="my-newsletter.mjml" />
+    </div>
+    
+    <div class="toolbar-group">
+      <button id="btnSave" title="Download MJML file">
+        <i class="fas fa-download"></i> Save
+      </button>
+      <button id="btnLoad" title="Load MJML file">
+        <i class="fas fa-upload"></i> Load
+      </button>
+      <button id="btnExport" title="Copy MJML to clipboard">
+        <i class="fas fa-copy"></i> Copy
+      </button>
+      <button id="btnViewCode" title="View MJML code">
+        <i class="fas fa-code"></i> Code
+      </button>
+    </div>
+    
+    <div class="toolbar-group">
+      <span id="status">Ready</span>
+    </div>
+    
+    <div class="toolbar-group" style="margin-left: auto;">
+      <span style="font-size: 13px; color: white;">
+        <i class="fab fa-github"></i> MJML Editor
+      </span>
+    </div>
+  </div>
+  
+  <!-- Code viewer modal -->
+  <div id="code-viewer" style="display: none;">
+    <div id="code-viewer-header">
+      <span><i class="fas fa-code"></i> MJML Code</span>
+      <div>
+        <button id="btnCopyCode" title="Copy to clipboard">
+          <i class="fas fa-copy"></i>
+        </button>
+        <button onclick="document.getElementById('code-viewer').style.display='none'" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div id="code-viewer-content">
+      <pre id="mjml-code"></pre>
+    </div>
+  </div>
+  
+  <!-- Studio SDK Editor -->
+  <div id="studio-editor"></div>
+
+  <!-- Load the main application -->
+  <script src="./app.js"></script>
+</body>
+</html>
