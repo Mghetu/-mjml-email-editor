@@ -1,15 +1,44 @@
 {
   "name": "mjml-email-editor",
   "version": "1.0.0",
-  "description": "MJML Email Editor with GrapesJS Studio SDK",
-  "main": "index.html",
+  "description": "MJML Email Editor with GrapesJS Studio SDK and Layout Sidebar Buttons",
+  "main": "app.js",
   "scripts": {
-    "start": "echo 'Open index.html in browser'"
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx http-server . -p 3000 -o --cors",
+    "build": "echo 'This is a client-side application, no build step needed'",
+    "lint": "echo 'Add linting here if needed'",
+    "test": "echo 'Add tests here if needed'"
   },
-  "dependencies": {
-    "@grapesjs/studio-sdk": "^1.0.55"
-  },
-  "keywords": ["mjml", "email", "editor", "grapesjs"],
+  "keywords": [
+    "mjml",
+    "email",
+    "editor",
+    "grapesjs",
+    "studio-sdk",
+    "drag-and-drop",
+    "responsive-email"
+  ],
   "author": "Your Name",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mghetu/-mjml-email-editor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mghetu/-mjml-email-editor/issues"
+  },
+  "homepage": "https://github.com/Mghetu/-mjml-email-editor#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
